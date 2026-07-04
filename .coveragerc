@@ -1,0 +1,18 @@
+[run]
+branch = True
+source =
+    pico_cache
+omit =
+    */_version.py
+
+[paths]
+pico_cache =
+    src/pico_cache
+    .tox/*/lib/*/site-packages/pico_cache
+    .tox/*/site-packages/pico_cache
+    */site-packages/pico_cache
+
+[report]
+show_missing = True
+omit =
+    */_version.py
