@@ -74,3 +74,22 @@ def test_lru_eviction():
     assert backend.get("b") == (False, None)
     assert backend.get("a") == (True, 1)
     assert backend.get("c") == (True, 3)
+
+
+def test_delete_evicts_single_entry():
+    backend = InMemoryCacheBackend(CacheSettings())
+    backend.set("keep", 1, ttl_seconds=60)
+    backend.set("drop", 2, ttl_seconds=60)
+    backend.delete("drop")
+    assert backend.get("drop") == (False, None)
+    assert backend.get("keep") == (True, 1)
+    backend.delete("absent")
+
+
+def test_clear_empties_the_backend():
+    backend = InMemoryCacheBackend(CacheSettings())
+    backend.set("a", 1, ttl_seconds=60)
+    backend.set("b", 2, ttl_seconds=60)
+    backend.clear()
+    assert backend.get("a") == (False, None)
+    assert backend.get("b") == (False, None)
