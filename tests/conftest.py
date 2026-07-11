@@ -1,17 +1,12 @@
 import pytest
-from pico_ioc import DictSource, configuration, init
 
 
 @pytest.fixture
-def make_container():
-    created = []
+def make_container(make_container):
+    """Extends the plugin fixture: kwargs become the caching config section."""
+    plugin_make = make_container
 
     def _make(module, **cache_cfg):
-        cfg = configuration(DictSource({"caching": cache_cfg}))
-        c = init(modules=["pico_caching", module], config=cfg)
-        created.append(c)
-        return c
+        return plugin_make(module, config={"caching": cache_cfg})
 
-    yield _make
-    for c in created:
-        c.shutdown()
+    return _make
